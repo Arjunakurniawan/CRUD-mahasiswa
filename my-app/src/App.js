@@ -1,35 +1,45 @@
 import React, { useState } from "react";
+import RowMahasiswa from "./components/RowMahasiswa";
+import RowTambahMahasiswa from "./components/RowTambahMahasiswa";
 
-// Data awal tabel mahasiswa
-const arrMahasiswa = [
+const arrMahasiswas = [
   {
     nim: "18010245",
     nama: "Eka Putra",
     jurusan: "Teknik Informatika",
     asalProvinsi: "DKI Jakarta",
   },
-  {
-    nim: "19010214",
-    nama: "Lisa Permata",
-    jurusan: "Sistem Informasi",
-    asalProvinsi: "Sumatera Barat",
-  },
-  {
-    nim: "20010710",
-    nama: "Rudi Setiawan",
-    jurusan: "Ilmu Komputer",
-    asalProvinsi: "Jawa Tengah",
-  },
-  {
-    nim: "20010790",
-    nama: "Friska Ramadhani",
-    jurusan: "Ilmu Komputer",
-    asalProvinsi: "Kalimantan Barat",
-  },
 ];
 
 const App = () => {
-  const [mahasiswas, setMahasiswas] = useState(arrMahasiswa);
+  const [mahasiswas, setMahasiswas] = useState(arrMahasiswas);
+
+  const handleTambahMahasiswa = (data) => {
+    const newMahasiswas = [...mahasiswas, data];
+    setMahasiswas(newMahasiswas);
+  };
+
+  const handleEditMahasiswa = (data) => {
+    const result = mahasiswas.findIndex(
+      (mahasiswa) => mahasiswa.nim === data.nim
+    );
+
+    const newMahasiswas = mahasiswas;
+    newMahasiswas.splice(result, 1, data);
+    setMahasiswas([...newMahasiswas]);
+  };
+  
+  const handleHapusMahasiswa = (e) => {
+    
+    const result = mahasiswas.findIndex(
+      (mahasiswa) => mahasiswa.nim === e.target.id
+    );
+
+    const newMahasiswas = mahasiswas;
+    newMahasiswas.splice(result, 1);
+    setMahasiswas([...newMahasiswas]);
+
+  };
 
   return (
     <div className="container mt-5">
@@ -49,67 +59,17 @@ const App = () => {
             </thead>
             <tbody>
               {mahasiswas.map((mahasiswa) => (
-                <tr key={mahasiswa.nim}>
-                  <td>{mahasiswa.nim}</td>
-                  <td>{mahasiswa.nama}</td>
-                  <td>{mahasiswa.jurusan}</td>
-                  <td>{mahasiswa.asalProvinsi}</td>
-                  <td>
-                    <button className="btn btn-secondary me-2">Edit</button>
-                    <button className="btn btn-danger">Hapus</button>
-                  </td>
-                </tr>
+                <RowMahasiswa
+                  key={mahasiswa.nim}
+                  mahasiswa={mahasiswa}
+                  onEditMahasiswa={handleEditMahasiswa}
+                  onHapusMahasiswa={handleHapusMahasiswa}
+                />
               ))}
-
-              <tr>
-                <td colSpan="5">
-                  <form>
-                    <div className="row row-cols-5 g-3">
-                      <div className="col">
-                        <input
-                          type="text"
-                          className="form-control"
-                          name="nim"
-                          placeholder="search"
-                          autoComplete="off"
-                        />
-                      </div>
-                      <div className="col">
-                        <input
-                          type="text"
-                          className="form-control"
-                          name="nama"
-                          autoComplete="off"
-                          placeholder="search"
-                        />
-                      </div>
-                      <div className="col">
-                        <input
-                          type="text"
-                          className="form-control"
-                          name="jurusan"
-                          placeholder="search"
-                          autoComplete="off"
-                        />
-                      </div>
-                      <div className="col">
-                        <input
-                          type="text"
-                          className="form-control"
-                          name="asalProvinsi"
-                          placeholder="search"
-                          autoComplete="off"
-                        />
-                      </div>
-                      <div className="col">
-                        <button type="submit" className="btn btn-primary">
-                          Tambah
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </td>
-              </tr>
+              <RowTambahMahasiswa
+                mahasiswas={mahasiswas}
+                onTambahMahasiswa={handleTambahMahasiswa}
+              />
             </tbody>
           </table>
         </div>
